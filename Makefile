@@ -13,3 +13,7 @@ OBJS  = $(SRCS:.c=.o)
 all: gwm
 
 gwm: $(OBJS)
+
+clean:
+	rm $(OBJS)
+
