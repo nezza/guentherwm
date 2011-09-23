@@ -55,6 +55,7 @@ void gwm_context_init(gwm_context *gwm, char *display_name) {
 	gwm->cs_act.border  = getcolor(CONFIG_BORDERCOLOR_SELECTED);
 	gwm->focus_mode = CONFIG_FOCUS_MODE;
 	gwm->raise_mode = CONFIG_RAISE_MODE;
+	gwm->launch_mode = CONFIG_LAUNCH_MODE;
 
 	gwm->wins = NULL;
 

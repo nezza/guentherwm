@@ -11,5 +11,11 @@ enum focus_mode {
 	focus_on_click
 };
 
+enum launch_mode {
+	launch_fullscreen,
+	launch_upper_left,
+	launch_fit_in
+};
+
 #endif
 

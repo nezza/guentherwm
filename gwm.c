@@ -42,10 +42,33 @@ void manage(Window w, XWindowAttributes *wa) {
 void configurerequest(gwm_context *gc, XEvent *e) {
 	XConfigureRequestEvent *ev = &e->xconfigurerequest;
 	XWindowChanges wc;
-	wc.x = ev->x;
-	wc.y = ev->y;
-	wc.width = ev->width;
-	wc.height = ev->height;
+	switch(gc->launch_mode) {
+		case launch_fullscreen:
+			wc.x = 1;
+			wc.y = 1;
+			wc.width = gc->sw-2;
+			wc.height = gc->sh-2;
+			break;
+		case launch_upper_left:
+			wc.x = 0;
+			wc.y = 0;
+			wc.width = ev->width;
+			wc.height = ev->height;
+			break;
+		case launch_fit_in:
+			if(ev->x > gc->sw-1) wc.x = gc->sw-1;
+			else wc.x = ev->x;
+			if(ev->y > gc->sh-1) wc.y = gc->sh-1;
+			else wc.y = ev->y;
+			if((wc.x + ev->width) > gc->sw-2) wc.width = (gc->sw - wc.x) - 2;
+			else wc.width = ev->width;
+			if((wc.y + ev->height) > gc->sh-2) wc.height = (gc->sh - wc.y) - 2;
+			else wc.height = ev->height;
+			break;
+		default:
+			puts("Unknown launch mode!");
+			return;
+	}
 	wc.border_width = ev->border_width;
 	wc.sibling = ev->above;
 	wc.stack_mode = ev->detail;
@@ -74,7 +97,7 @@ void maprequest(gwm_context *gc, XEvent *e) {
 			wa.x, wa.y, wa.width, wa.height);
 	manage(ev->window, &wa);
 	XWindowChanges wc;
-	wc.border_width = 3;
+	wc.border_width = 1;
 	XConfigureWindow(gwm.dpy, ev->window, CWBorderWidth, &wc);
 	XSetWindowBorder(gwm.dpy, ev->window, gwm.cs_norm.border);
 	XSelectInput(gwm.dpy, ev->window,
@@ -146,7 +169,6 @@ int main() {
 				break;
 			case ButtonPress:
 				puts("Button press!");
-//				buttonpress(&gwm, &ev);
 				break;
 			case KeyPress:
 				puts("Key press!");

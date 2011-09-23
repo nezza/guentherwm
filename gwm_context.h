@@ -26,6 +26,7 @@ typedef struct {
 
 	enum raise_mode raise_mode;
 	enum focus_mode focus_mode;
+	enum launch_mode launch_mode;
 
 	Cursor c_normal;
 	Cursor c_move;

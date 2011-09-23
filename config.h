@@ -6,6 +6,7 @@
 
 #define CONFIG_FOCUS_MODE focus_on_mouse
 #define CONFIG_RAISE_MODE raise_on_click
+#define CONFIG_LAUNCH_MODE launch_fullscreen
 
 
 #endif
