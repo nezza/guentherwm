@@ -14,12 +14,10 @@ void gwm_context_add_window(Window w) {
 	gwm_window *new = gwm_create_window(w);
 	if(!gwm.wins) {
 		gwm.wins = new;
-		puts("NOW MANAGING.");
 	} else {
 		gwm_window *last = gwm_window_get_last(gwm.wins);
 		new->prev = last;
 		last->next = new;
-		puts("NOT MANAGING");
 	}
 }
 

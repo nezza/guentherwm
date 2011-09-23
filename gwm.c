@@ -33,10 +33,9 @@ int xerrorstart(Display *dpy, XErrorEvent *ee) {
 void manage(Window w, XWindowAttributes *wa) {
 	gwm_window *win;
 	if(!(win = gwm_get_window(w))) {
-		puts("We don't know this window yet.");
 		gwm_context_add_window(w);
 	} else {
-		puts("We know that window.");
+		puts("We know that window, but we do nothing....");
 	}
 }
 
@@ -156,7 +155,6 @@ int main() {
 				if(gwm.focused) {
 					if((win = gwm_get_window(gwm.focused->win))) {
 						if(win->next) {
-							puts("TEST");
 							focus(win->next);
 						} else {
 							focus(gwm.wins);
