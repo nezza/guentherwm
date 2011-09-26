@@ -17,5 +17,5 @@ all: gwm
 gwm: $(OBJS)
 
 clean:
-	rm $(OBJS)
+	rm gwm $(OBJS)
 
