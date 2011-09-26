@@ -36,8 +36,6 @@ struct gwm_context {
 
 	gwm_workspace *spcs;   // Workspaces
 	gwm_workspace *active; // The active workspace
-
-	gwm_window *wins; // Windows known to gwm.
 };
 
 extern gwm_context gwm;

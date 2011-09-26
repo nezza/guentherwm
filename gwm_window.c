@@ -54,3 +54,7 @@ void gwm_window_resize_relative(gwm_window *win, unsigned w, unsigned h) {
 	gwm_window_resize(win, wa.width + w, wa.height + h);
 }
 
+void gwm_window_fullscreen(gwm_window *win) {
+	XMoveResizeWindow(gwm.dpy, win->win, 0, 0, gwm.sw, gwm.sh);
+}
+

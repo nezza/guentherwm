@@ -2,6 +2,7 @@
 #define GWM_FUNCTIONS_H_ 1
 
 void spawn();
+void terminal();
 void focus_next();
 void focus_prev();
 void new_workspace();
@@ -17,6 +18,7 @@ void resize_window_up();
 void resize_window_down();
 void resize_window_left();
 void resize_window_right();
+void fullscreen();
 
 #endif
 

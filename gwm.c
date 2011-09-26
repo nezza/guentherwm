@@ -45,6 +45,8 @@ void manage(Window w, XWindowAttributes *wa) {
 void configurerequest(gwm_context *gc, XEvent *e) {
 	XConfigureRequestEvent *ev = &e->xconfigurerequest;
 	XWindowChanges wc;
+
+	// TODO: The launch modes shouldn't be here.
 	switch(gc->launch_mode) {
 		case launch_normal:
 			wc.x = ev->x;

@@ -26,6 +26,7 @@ void gwm_window_move(gwm_window *win, unsigned x, unsigned y);
 void gwm_window_move_relative(gwm_window *win, unsigned x, unsigned y);
 void gwm_window_resize(gwm_window *win, unsigned w, unsigned h);
 void gwm_window_resize_relative(gwm_window *win, unsigned w, unsigned h);
+void gwm_window_fullscreen(gwm_window *win);
 
 #endif
 

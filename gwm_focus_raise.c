@@ -17,3 +17,7 @@ void unfocus(gwm_window *win) {
 	XGrabButton(gwm.dpy, AnyButton, AnyModifier, win->win, False, ButtonPressMask|ButtonReleaseMask, GrabModeSync, GrabModeSync, None, None);
 }
 
+void raise(gwm_window *win) {
+	XRaiseWindow(gwm.dpy, win->win);
+}
+

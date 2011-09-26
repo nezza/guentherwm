@@ -17,14 +17,29 @@ void spawn() {
 	}
 }
 
+void terminal() {
+	if(fork() == 0) {
+		if(gwm.dpy) {
+			close(ConnectionNumber(gwm.dpy));
+		}
+		setsid();
+		char *cmd[] = {"/usr/bin/urxvt",
+			"-bg", "black",
+			"-fg", "white",
+			"+sb", "-fn",
+			"xft:Courier 10 Pitch:pixelsize=14", NULL};
+		execvp(cmd[0], cmd);
+	}
+}
+
 void focus_next() {
 	if(gwm.focused) {
 		gwm_window *win;
-		if((win = gwm_context_get_window(&gwm, gwm.focused->win))) {
+		if((win = gwm_workspace_get_window(gwm.active, gwm.focused->win))) {
 			if(win->next) {
 				focus(win->next);
 			} else {
-				focus(gwm.wins);
+				focus(gwm.active->wins);
 			}
 		}
 	} else {
@@ -35,11 +50,11 @@ void focus_next() {
 void focus_prev() {
 	if(gwm.focused) {
 		gwm_window *win;
-		if((win = gwm_context_get_window(&gwm, gwm.focused->win))) {
+		if((win = gwm_workspace_get_window(gwm.active, gwm.focused->win))) {
 			if(win->prev) {
 				focus(win->prev);
 			} else {
-				focus(gwm_window_get_last(gwm.focused));
+				focus(gwm_window_get_last(gwm.active->wins));
 			}
 		}
 	} else {
@@ -98,4 +113,10 @@ void resize_window_up() {_resize_window(0, -CONFIG_RESIZE_BY);}
 void resize_window_down() {_resize_window(0, CONFIG_RESIZE_BY);}
 void resize_window_left() {_resize_window(-CONFIG_RESIZE_BY, 0);}
 void resize_window_right() {_resize_window(CONFIG_RESIZE_BY, 0);}
+
+void fullscreen() {
+	if(gwm.focused) {
+		gwm_window_fullscreen(gwm.focused);
+	}
+}
 

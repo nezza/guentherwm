@@ -44,6 +44,10 @@ void gwm_context_init(gwm_context *gwm, char *display_name) {
 			SubstructureRedirectMask|ButtonPressMask);
 	XSync(gwm->dpy, False);
 
+	// Revert back to the original xlib error handler.
+	// TODO: Implement own error handler.
+	XSetErrorHandler(xerrorxlib);
+	XSync(gwm->dpy, False);
 	// Get the default screen for the display we're running on.
 	// (Remember that display means Xserver, and one display can as such
 	// spread over multiple screens.)
@@ -64,7 +68,6 @@ void gwm_context_init(gwm_context *gwm, char *display_name) {
 	gwm->spcs = gwm_workspace_create(gwm);
 	//TODO: Handle malloc failure!
 	gwm->active = gwm->spcs;
-	gwm->wins = NULL;
 
 	int i;
 	for(i=0; keys[i].func; i++) {
