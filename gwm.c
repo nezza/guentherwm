@@ -35,7 +35,7 @@ int xerrorstart(Display *dpy, XErrorEvent *ee) {
 
 void manage(Window w, XWindowAttributes *wa) {
 	gwm_window *win;
-	if(!(win = gwm_get_window(w))) {
+	if(!(win = gwm_context_get_window(&gwm, w))) {
 		gwm_context_add_window(w);
 	} else {
 		puts("We know that window, but we do nothing....");
@@ -46,6 +46,12 @@ void configurerequest(gwm_context *gc, XEvent *e) {
 	XConfigureRequestEvent *ev = &e->xconfigurerequest;
 	XWindowChanges wc;
 	switch(gc->launch_mode) {
+		case launch_normal:
+			wc.x = ev->x;
+			wc.y = ev->y;
+			wc.width = ev->width;
+			wc.height = ev->height;
+			break;
 		case launch_fullscreen:
 			wc.x = 1;
 			wc.y = 1;
@@ -132,7 +138,7 @@ void enternotify(gwm_context *gc, XEvent *e){
 		XRaiseWindow(gwm.dpy, ev->window);
 	}
 	if(gwm.focus_mode == focus_on_mouse) {
-		gwm_window *win = gwm_get_window(ev->window);
+		gwm_window *win = gwm_context_get_window(&gwm, ev->window);
 		if(win) {
 			focus(win);
 		}
@@ -146,7 +152,7 @@ void buttonpress(gwm_context *gc, XEvent *e) {
 			XRaiseWindow(gwm.dpy, ev->window);
 		}
 		if(gwm.focus_mode == focus_on_click) {
-			gwm_window *win = gwm_get_window(ev->window);
+			gwm_window *win = gwm_context_get_window(&gwm, ev->window);
 			if(win) {
 				focus(win);
 			}

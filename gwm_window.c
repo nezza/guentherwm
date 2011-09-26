@@ -3,12 +3,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-gwm_window *gwm_get_window(Window w) {
-	if(gwm.wins) {
-		gwm_window *cur;
-		for(cur = gwm.wins; cur; cur = cur->next) {
-			if(cur->win == w) return cur;
-		}
+gwm_window *gwm_window_get_window(gwm_window *wins, Window w) {
+	gwm_window *cur;
+	for(cur = wins; cur; cur = cur->next) {
+		if(cur->win == w) return cur;
 	}
 	return NULL;
 }

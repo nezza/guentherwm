@@ -13,13 +13,16 @@ extern int xerrorstart(Display *dpy, XErrorEvent *ee);
 
 void gwm_context_add_window(Window w) {
 	gwm_window *new = gwm_create_window(w);
-	if(!gwm.wins) {
-		gwm.wins = new;
-	} else {
-		gwm_window *last = gwm_window_get_last(gwm.wins);
-		new->prev = last;
-		last->next = new;
+	gwm_workspace_add_window(gwm.active, new);
+}
+
+gwm_window *gwm_context_get_window(gwm_context *gwm, Window w) {
+	gwm_window *ret = NULL;
+	gwm_workspace *spc;
+	for(spc = gwm->spcs; spc && !ret; spc = spc->next) {
+		ret = gwm_workspace_get_window(spc, w);
 	}
+	return ret;
 }
 
 void gwm_context_init(gwm_context *gwm, char *display_name) {
@@ -58,6 +61,9 @@ void gwm_context_init(gwm_context *gwm, char *display_name) {
 	gwm->raise_mode = CONFIG_RAISE_MODE;
 	gwm->launch_mode = CONFIG_LAUNCH_MODE;
 
+	gwm->spcs = gwm_workspace_create(gwm);
+	//TODO: Handle malloc failure!
+	gwm->active = gwm->spcs;
 	gwm->wins = NULL;
 
 	int i;

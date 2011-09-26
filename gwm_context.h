@@ -5,6 +5,7 @@
 #include <X11/cursorfont.h>
 
 #include "gwm_types.h"
+#include "gwm_workspace.h"
 #include "gwm_window.h"
 
 typedef struct {
@@ -33,11 +34,15 @@ struct gwm_context {
 
 	gwm_window *focused;
 
+	gwm_workspace *spcs;   // Workspaces
+	gwm_workspace *active; // The active workspace
+
 	gwm_window *wins; // Windows known to gwm.
 };
 
 extern gwm_context gwm;
 
+gwm_window *gwm_context_get_window(gwm_context *gwm, Window w);
 void gwm_context_add_window(Window w);
 void gwm_context_init(gwm_context *gwm, char *display_name);
 

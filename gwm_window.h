@@ -16,7 +16,7 @@ struct gwm_window {
 	gwm_window *prev;
 };
 
-gwm_window *gwm_get_window(Window w);
+gwm_window *gwm_window_get_window(gwm_window *wins, Window w);
 
 gwm_window *gwm_create_window(Window w);
 

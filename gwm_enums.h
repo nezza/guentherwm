@@ -12,6 +12,7 @@ enum focus_mode {
 };
 
 enum launch_mode {
+	launch_normal,
 	launch_fullscreen,
 	launch_upper_left,
 	launch_fit_in

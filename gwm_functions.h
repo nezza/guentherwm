@@ -4,6 +4,11 @@
 void spawn();
 void focus_next();
 void focus_prev();
+void new_workspace();
+void next_workspace();
+void prev_workspace();
+void hide_workspace();
+void show_workspace();
 void move_window_up();
 void move_window_down();
 void move_window_left();
