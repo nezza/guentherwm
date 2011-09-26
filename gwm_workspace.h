@@ -3,11 +3,14 @@
 
 #include "gwm_types.h"
 #include "gwm_context.h"
+#include "gwm_organizer.h"
 #include "gwm_window.h"
 
 struct gwm_workspace {
 	gwm_context *gwm;
 	gwm_window *wins;
+
+	gwm_organizer *organizer;
 
 	gwm_workspace *prev;
 	gwm_workspace *next;
