@@ -4,9 +4,8 @@
 #include <X11/Xlib.h>
 
 #include "gwm_enums.h"
+#include "gwm_types.h"
 #include "gwm_context.h"
-
-typedef struct gwm_window gwm_window;
 
 struct gwm_window {
 	Window win;

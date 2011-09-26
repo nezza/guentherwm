@@ -1,5 +1,7 @@
 #include "gwm_context.h"
+#include "gwm_keys.h"
 #include "config.h"
+
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -59,13 +61,16 @@ void gwm_context_init(gwm_context *gwm, char *display_name) {
 
 	gwm->wins = NULL;
 
-	XGrabKey(gwm->dpy,
-			XKeysymToKeycode(gwm->dpy, XK_Tab),
-			Mod1Mask,
-			gwm->root,
-			True,
-			GrabModeAsync,
-			GrabModeAsync);
+	int i;
+	for(i=0; keys[i].func; i++) {
+		XGrabKey(gwm->dpy,
+				XKeysymToKeycode(gwm->dpy, keys[i].key),
+				keys[i].modifier,
+				gwm->root,
+				True,
+				GrabModeAsync,
+				GrabModeAsync);
+	}
 
 
 	XSetWindowAttributes wa;

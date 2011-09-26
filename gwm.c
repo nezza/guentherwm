@@ -3,9 +3,12 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <unistd.h>
 
 #include <X11/keysym.h>
 #include <X11/Xlib.h>
+
+#include "gwm_keys.h"
 
 typedef void(*gwm_event_handler)(gwm_context *gwm, XEvent *e);
 
@@ -146,11 +149,24 @@ void buttonpress(gwm_context *gc, XEvent *e) {
 		}
 	}
 }
+
+void keypress(gwm_context *gc, XEvent *e) {
+	XKeyEvent *ev = &e->xkey;
+	int i;
+	for(i=0; keys[i].func; i++) {
+		if((ev->state == keys[i].modifier) &&
+				(ev->keycode == XKeysymToKeycode(gwm.dpy, keys[i].key))) {
+			keys[i].func();
+		}
+	}
+}
+
 gwm_event_handler handler[LASTEvent] = {
 	[ButtonPress] = buttonpress,
 	[MapRequest] = maprequest,
 	[EnterNotify] = enternotify,
-	[ConfigureRequest] = configurerequest
+	[ConfigureRequest] = configurerequest,
+	[KeyPress] = keypress
 };
 int main() {
 	gwm_context_init(&gwm, NULL);
@@ -159,35 +175,8 @@ int main() {
 	while(!XNextEvent(gwm.dpy, &ev)) {
 		if(handler[ev.type]) {
 			handler[ev.type](&gwm, &ev);
-		}
-		switch(ev.type) {
-			case PropertyNotify:
-				puts("Property notify!");
-				break;
-			case FocusIn:
-				puts("Get's focus!");
-				break;
-			case ButtonPress:
-				puts("Button press!");
-				break;
-			case KeyPress:
-				puts("Key press!");
-				XKeyEvent *e = &ev.xkey;
-				gwm_window *win;
-				if(gwm.focused) {
-					if((win = gwm_get_window(gwm.focused->win))) {
-						if(win->next) {
-							focus(win->next);
-						} else {
-							focus(gwm.wins);
-						}
-					}
-				} else {
-					puts("Window not managed.");
-				}
-				break;
-			default:
-				printf("Event: %d\n", ev.type);
+		} else {
+			printf("Unhandled event: %d\n", ev.type);
 		}
 	}
 }
