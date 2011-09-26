@@ -8,7 +8,6 @@
 #include <X11/Xlib.h>
 #include <X11/keysym.h>
 
-extern gwm_context gwm;
 extern int (*xerrorxlib)(Display *, XErrorEvent *);
 extern int xerrorstart(Display *dpy, XErrorEvent *ee);
 

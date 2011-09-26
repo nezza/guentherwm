@@ -2,8 +2,6 @@
 
 #include "gwm_context.h"
 
-extern gwm_context gwm;
-
 void focus(gwm_window *win) {
 	if(gwm.focused)
 		unfocus(gwm.focused);

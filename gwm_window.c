@@ -3,8 +3,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-extern gwm_context gwm;
-
 gwm_window *gwm_get_window(Window w) {
 	if(gwm.wins) {
 		gwm_window *cur;

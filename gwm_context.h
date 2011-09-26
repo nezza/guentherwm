@@ -36,6 +36,8 @@ struct gwm_context {
 	gwm_window *wins; // Windows known to gwm.
 };
 
+extern gwm_context gwm;
+
 void gwm_context_add_window(Window w);
 void gwm_context_init(gwm_context *gwm, char *display_name);
 

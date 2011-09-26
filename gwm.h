@@ -8,7 +8,5 @@
 #include "gwm_window.h"
 #include "gwm_context.h"
 
-extern gwm_context gwm;
-
 #endif
 

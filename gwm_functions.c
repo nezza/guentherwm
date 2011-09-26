@@ -5,8 +5,6 @@
 #include <unistd.h>
 #include <stdio.h>
 
-extern gwm_context gwm;
-
 void spawn() {
 	if(fork() == 0) {
 		if(gwm.dpy) {

@@ -63,10 +63,14 @@ void configurerequest(gwm_context *gc, XEvent *e) {
 			else wc.x = ev->x;
 			if(ev->y > gc->sh-1) wc.y = gc->sh-1;
 			else wc.y = ev->y;
-			if((wc.x + ev->width) > gc->sw-2) wc.width = (gc->sw - wc.x) - 2;
-			else wc.width = ev->width;
-			if((wc.y + ev->height) > gc->sh-2) wc.height = (gc->sh - wc.y) - 2;
-			else wc.height = ev->height;
+			if((wc.x + ev->width) > gc->sw-2)
+				wc.width = (gc->sw - wc.x) - 2;
+			else
+				wc.width = ev->width;
+			if((wc.y + ev->height) > gc->sh-2)
+				wc.height = (gc->sh - wc.y) - 2;
+			else
+				wc.height = ev->height;
 			break;
 		default:
 			puts("Unknown launch mode!");
