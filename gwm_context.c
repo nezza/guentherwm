@@ -10,9 +10,10 @@
 
 extern int (*xerrorxlib)(Display *, XErrorEvent *);
 extern int xerrorstart(Display *dpy, XErrorEvent *ee);
+extern int xerror(Display *dpy, XErrorEvent *ee);
 
 void gwm_context_add_window(Window w) {
-	gwm_window *new = gwm_create_window(w);
+	gwm_window *new = gwm_create_window(gwm.active, w);
 	gwm_workspace_add_window(gwm.active, new);
 }
 
@@ -46,7 +47,7 @@ void gwm_context_init(gwm_context *gwm, char *display_name) {
 
 	// Revert back to the original xlib error handler.
 	// TODO: Implement own error handler.
-	XSetErrorHandler(xerrorxlib);
+	XSetErrorHandler(xerror);
 	XSync(gwm->dpy, False);
 	// Get the default screen for the display we're running on.
 	// (Remember that display means Xserver, and one display can as such

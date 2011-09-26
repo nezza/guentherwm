@@ -7,6 +7,7 @@
 
 #include <X11/keysym.h>
 #include <X11/Xlib.h>
+#include <X11/Xproto.h>
 
 #include "gwm_keys.h"
 
@@ -28,9 +29,17 @@ unsigned long getcolor(const char *colstr) {
 }
 
 int xerrorstart(Display *dpy, XErrorEvent *ee) {
-	if(ee->error_code == BadWindow) return 0;
 	printf("Another window manager is already running.\n");
 	exit(EXIT_FAILURE);
+}
+
+int xerror(Display *dpy, XErrorEvent *ee) {
+	if((ee->error_code == BadWindow) ||
+			(ee->request_code == X_SetInputFocus && ee->error_code == BadMatch)) {
+		puts("Test");
+		return 0;
+	}
+	return xerrorxlib(dpy, ee);
 }
 
 void manage(Window w, XWindowAttributes *wa) {
