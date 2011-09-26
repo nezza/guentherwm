@@ -36,3 +36,9 @@ gwm_window *gwm_window_get_last(gwm_window *win) {
 	return win;
 }
 
+void gwm_window_move_relative(gwm_window *win, unsigned x, unsigned y) {
+	XWindowAttributes wa;
+	XGetWindowAttributes(gwm.dpy, win->win, &wa);
+	XMoveWindow(gwm.dpy, win->win, wa.x + x, wa.y + y);
+}
+

@@ -8,5 +8,7 @@
 #define CONFIG_RAISE_MODE raise_on_click
 #define CONFIG_LAUNCH_MODE launch_fullscreen
 
+// Amount of pixels to move by with move_window_left etc.
+#define CONFIG_MOVE_BY 10
 
 #endif

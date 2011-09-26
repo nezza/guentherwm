@@ -1,6 +1,7 @@
 #include "gwm_context.h"
 #include "gwm_window.h"
 #include "gwm_focus_raise.h"
+#include "config.h"
 
 #include <unistd.h>
 #include <stdio.h>
@@ -43,6 +44,36 @@ void focus_prev() {
 		}
 	} else {
 		puts("Unknown window.");
+	}
+}
+
+void move_window_up() {
+	if(gwm.focused) {
+		gwm_window_move_relative(gwm.focused, 0, -CONFIG_MOVE_BY);
+	}
+}
+
+void move_window_down() {
+	if(gwm.focused) {
+		gwm_window_move_relative(gwm.focused, 0, CONFIG_MOVE_BY);
+	}
+}
+
+void move_window_left() {
+	if(gwm.focused) {
+		gwm_window_move_relative(gwm.focused, -CONFIG_MOVE_BY, 0);
+	}
+}
+
+void move_window_right() {
+	if(gwm.focused) {
+		gwm_window_move_relative(gwm.focused, CONFIG_MOVE_BY, 0);
+	}
+}
+
+void make_fullscreen() {
+	if(gwm.focused) {
+
 	}
 }
 

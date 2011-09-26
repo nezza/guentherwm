@@ -22,5 +22,7 @@ gwm_window *gwm_create_window(Window w);
 
 gwm_window *gwm_window_get_last(gwm_window *win);
 
+void gwm_window_move_relative(gwm_window *win, unsigned x, unsigned y);
+
 #endif
 
