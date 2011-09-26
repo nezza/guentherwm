@@ -47,33 +47,25 @@ void focus_prev() {
 	}
 }
 
-void move_window_up() {
+void _move_window(unsigned x, unsigned y) {
 	if(gwm.focused) {
-		gwm_window_move_relative(gwm.focused, 0, -CONFIG_MOVE_BY);
+		gwm_window_move_relative(gwm.focused, x, y);
 	}
 }
 
-void move_window_down() {
+void move_window_up() {_move_window(0, -CONFIG_MOVE_BY);}
+void move_window_down() {_move_window(0, CONFIG_MOVE_BY);}
+void move_window_left() {_move_window(-CONFIG_MOVE_BY, 0);}
+void move_window_right() {_move_window(CONFIG_MOVE_BY, 0);}
+
+void _resize_window(unsigned w, unsigned h) {
 	if(gwm.focused) {
-		gwm_window_move_relative(gwm.focused, 0, CONFIG_MOVE_BY);
+		puts("RESIZING :)");
+		gwm_window_resize_relative(gwm.focused, w, h);
 	}
 }
 
-void move_window_left() {
-	if(gwm.focused) {
-		gwm_window_move_relative(gwm.focused, -CONFIG_MOVE_BY, 0);
-	}
-}
-
-void move_window_right() {
-	if(gwm.focused) {
-		gwm_window_move_relative(gwm.focused, CONFIG_MOVE_BY, 0);
-	}
-}
-
-void make_fullscreen() {
-	if(gwm.focused) {
-
-	}
-}
-
+void resize_window_up() {_resize_window(0, -CONFIG_RESIZE_BY);}
+void resize_window_down() {_resize_window(0, CONFIG_RESIZE_BY);}
+void resize_window_left() {_resize_window(-CONFIG_RESIZE_BY, 0);}
+void resize_window_right() {_resize_window(CONFIG_RESIZE_BY, 0);}

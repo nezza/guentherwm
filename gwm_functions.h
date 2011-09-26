@@ -8,6 +8,10 @@ void move_window_up();
 void move_window_down();
 void move_window_left();
 void move_window_right();
+void resize_window_up();
+void resize_window_down();
+void resize_window_left();
+void resize_window_right();
 
 #endif
 

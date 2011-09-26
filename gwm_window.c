@@ -36,9 +36,23 @@ gwm_window *gwm_window_get_last(gwm_window *win) {
 	return win;
 }
 
+void gwm_window_move(gwm_window *win, unsigned x, unsigned y) {
+	XMoveWindow(gwm.dpy, win->win, x, y);
+}
+
 void gwm_window_move_relative(gwm_window *win, unsigned x, unsigned y) {
 	XWindowAttributes wa;
 	XGetWindowAttributes(gwm.dpy, win->win, &wa);
-	XMoveWindow(gwm.dpy, win->win, wa.x + x, wa.y + y);
+	gwm_window_move(win, wa.x + x, wa.y + y);
+}
+
+void gwm_window_resize(gwm_window *win, unsigned w, unsigned h) {
+	XResizeWindow(gwm.dpy, win->win, w, h);
+}
+
+void gwm_window_resize_relative(gwm_window *win, unsigned w, unsigned h) {
+	XWindowAttributes wa;
+	XGetWindowAttributes(gwm.dpy, win->win, &wa);
+	gwm_window_resize(win, wa.width + w, wa.height + h);
 }
 
