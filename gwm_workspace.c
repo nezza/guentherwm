@@ -17,16 +17,40 @@ gwm_workspace *gwm_workspace_create(gwm_context *gwm) {
 }
 
 void gwm_workspace_add_window(gwm_workspace *spc, gwm_window *win) {
-	// If there are no windows yet, we need to store the first window
+	// If there are no windows yet, we need to store it as the first window
 	// in the workspace.
 	if(!spc->wins) {
 		spc->wins = win;
+		win->prev = NULL;
 	} else { // Else we put it at the end of the window chain of the space.
 		gwm_window *last = gwm_window_get_last(spc->wins);
 		win->prev = last;
 		last->next = win;
 	}
 	win->next = NULL;
+	win->spc = spc;
+}
+
+void gwm_workspace_remove_window(gwm_window *win) {
+	if(win->next) {
+		if(win->prev) {
+			win->next->prev = win->prev;
+			win->prev->next = win->next;
+		} else {
+			win->next->prev = NULL;
+		}
+	}
+	if(win->prev) {
+		if(win->next) {
+			win->prev->next = win->next;
+			win->next->prev = win->prev;
+		} else {
+			win->prev->next = NULL;
+		}
+		win->spc->wins = gwm_window_get_first(win->prev);
+	} else {
+		win->spc->wins = win->next;
+	}
 }
 
 // Find a window on the workspace. Can also be used to just determine
@@ -53,6 +77,11 @@ void gwm_workspace_hide(gwm_workspace *spc) {
 		// Unmap ('hide') each window.
 		XUnmapWindow(spc->gwm->dpy, cur->win);
 	}
+}
+
+gwm_workspace *gwm_workspace_get_first(gwm_workspace *spc) {
+	for(; spc->prev; spc = spc->prev);
+	return spc;
 }
 
 gwm_workspace *gwm_workspace_get_last(gwm_workspace *spc) {

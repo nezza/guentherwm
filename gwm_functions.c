@@ -92,6 +92,26 @@ void show_workspace() {
 	gwm_workspace_show(gwm.active);
 }
 
+void move_to_next_workspace() {
+	if(gwm.focused && gwm.active->next) {
+		gwm_window_hide(gwm.focused);
+		gwm_workspace_remove_window(gwm.focused);
+		gwm_workspace_add_window(gwm.active->next, gwm.focused);
+		unfocus(gwm.focused);
+		gwm.focused = NULL;
+	}
+}
+
+void move_to_prev_workspace() {
+	if(gwm.focused && gwm.active->prev) {
+		gwm_window_hide(gwm.focused);
+		gwm_workspace_remove_window(gwm.focused);
+		gwm_workspace_add_window(gwm.active->prev, gwm.focused);
+		unfocus(gwm.focused);
+		gwm.focused = NULL;
+	}
+}
+
 static void _move_window(unsigned x, unsigned y) {
 	if(gwm.focused) {
 		gwm_window_move_relative(gwm.focused, x, y);

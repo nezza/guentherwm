@@ -11,7 +11,7 @@ gwm_window *gwm_window_get_window(gwm_window *wins, Window w) {
 	return NULL;
 }
 
-gwm_window *gwm_create_window(Window w) {
+gwm_window *gwm_create_window(gwm_workspace *spc, Window w) {
 	gwm_window *ret = malloc(sizeof(gwm_window));
 	if(!ret) {
 		printf("Malloc failed!");
@@ -24,13 +24,18 @@ gwm_window *gwm_create_window(Window w) {
 	ret->next = NULL;
 	ret->prev = NULL;
 
+	ret->spc = spc;
+
 	return ret;
 }
 
+gwm_window *gwm_window_get_first(gwm_window *win) {
+	for(; win->prev; win = win->prev);
+	return win;
+}
+
 gwm_window *gwm_window_get_last(gwm_window *win) {
-	if(!win) return NULL;
-	gwm_window *cur;
-	for(cur = win; cur; win = cur, cur = cur->next);
+	for(; win->next; win = win->next);
 	return win;
 }
 
@@ -55,6 +60,14 @@ void gwm_window_resize_relative(gwm_window *win, unsigned w, unsigned h) {
 }
 
 void gwm_window_fullscreen(gwm_window *win) {
-	XMoveResizeWindow(gwm.dpy, win->win, 0, 0, gwm.sw, gwm.sh);
+	XMoveResizeWindow(gwm.dpy, win->win, -1, -1, gwm.sw+1, gwm.sh+1);
+}
+
+void gwm_window_show(gwm_window *win) {
+	XMapWindow(win->spc->gwm->dpy, win->win);
+}
+
+void gwm_window_hide(gwm_window *win) {
+	XUnmapWindow(win->spc->gwm->dpy, win->win);
 }
 

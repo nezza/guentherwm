@@ -8,6 +8,8 @@ void focus_prev();
 void new_workspace();
 void next_workspace();
 void prev_workspace();
+void move_to_next_workspace();
+void move_to_prev_workspace();
 void hide_workspace();
 void show_workspace();
 void move_window_up();
