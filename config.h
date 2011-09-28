@@ -12,4 +12,7 @@
 #define CONFIG_MOVE_BY 10
 #define CONFIG_RESIZE_BY 10
 
+#define CONFIG_MODKEY Mod4Mask
+
 #endif
+
