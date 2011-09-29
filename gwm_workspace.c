@@ -40,6 +40,7 @@ void gwm_workspace_remove_window(gwm_window *win) {
 	if(win->spc->wins == win) {
 		win->spc->wins = win->next;
 	}
+	win->spc->organizer->remove_window(win);
 	GWM_LIST_REMOVE(win);
 }
 
