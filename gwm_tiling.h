@@ -5,10 +5,12 @@
 
 typedef struct gwm_tiling_column gwm_tiling_column;
 typedef struct gwm_tiling_data gwm_tiling_data;
+typedef struct gwm_tiling_window gwm_tiling_window;
 
 struct gwm_tiling_column {
 	gwm_tiling_data *data;
 	unsigned int column_nr;
+	gwm_tiling_window *wins;
 	gwm_tiling_column *prev;
 	gwm_tiling_column *next;
 };
@@ -21,10 +23,13 @@ struct gwm_tiling_data {
 	gwm_workspace *spc;
 };
 
-typedef struct {
+struct gwm_tiling_window {
 	gwm_tiling_data *data;
 	gwm_tiling_column *column;
-} gwm_tiling_window_data;
+	gwm_window *win;
+	gwm_tiling_window *prev;
+	gwm_tiling_window *next;
+};
 
 void gwm_tiling_init(gwm_workspace *spc);
 void gwm_tiling_free(gwm_workspace *spc);
@@ -38,6 +43,7 @@ void gwm_tiling_reorganize_all(gwm_workspace *spc);
 void gwm_tiling_move_resize(gwm_window *win);
 void gwm_tiling_move_window_left(gwm_window *win);
 void gwm_tiling_move_window_right(gwm_window *win);
+void gwm_tiling_focus(gwm_window *win);
 
 #endif
 

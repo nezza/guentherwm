@@ -1,6 +1,8 @@
 #include "gwm_tiling.h"
 #include "gwm_workspace.h"
 #include "gwm_window.h"
+#include "gwm_focus_raise.h"
+#include "gwm_list_helpers.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -17,6 +19,7 @@ void gwm_tiling_init(gwm_workspace *spc) {
 	spc->organizer->free_organizer = gwm_tiling_free;
 	spc->organizer->move_left = gwm_tiling_move_window_left;
 	spc->organizer->move_right = gwm_tiling_move_window_right;
+	spc->organizer->focus = gwm_tiling_focus;
 	spc->organizer->data = malloc(sizeof(gwm_tiling_data));
 	if(!spc->organizer->data) {
 		free(spc->organizer);
@@ -49,48 +52,66 @@ gwm_tiling_column *gwm_tiling_create_column(
 	if(prev) prev->next = ret;
 	ret->next = next;
 	if(next) next->prev = ret;
+	ret->wins = NULL;
 	return ret;
 }
 
+void gwm_tiling_focus(gwm_window *win) {
+	gwm_tiling_window *wdata = win->organizer_data;
+	wdata->data->active_column = wdata->column;
+}
+
 void gwm_tiling_destroy_column(gwm_tiling_column *column) {
-	if(column->data->columns == column) {
-		column->data->columns = column->next;
-	}
-	if(column->prev) {
-		if(column->next) {
-			column->prev->next = column->next;
-			column->next->prev = column->prev;
-		} else {
-			column->prev->next = NULL;
-		}
-	}
-	if(column->next) {
-		if(column->prev) {
-			column->next->prev = column->prev;
-			column->prev->next = column->next;
-		} else {
-			column->next->prev = NULL;
-		}
-	}
+	GWM_NEXT_IF_FIRST(column->data->columns, column);
+	GWM_LIST_REMOVE(column);
 	gwm_tiling_reorganize_all(column->data->spc);
 	free(column);
 }
 
+gwm_tiling_column *gwm_tiling_column_get_last(gwm_tiling_column *column) {
+	for(;column->next;column = column->next);
+	return column;
+}
+
+gwm_tiling_window *gwm_tiling_window_get_last(gwm_tiling_window *win) {
+	for(;win->next;win = win->next);
+	return win;
+}
+
 void gwm_tiling_add_window(gwm_window *win) {
 	gwm_tiling_data *data = win->spc->organizer->data;
-	win->organizer_data = malloc(sizeof(gwm_tiling_window_data));
+	win->organizer_data = malloc(sizeof(gwm_tiling_window));
 	if(!win->organizer_data) {
 		printf("Malloc failed!\n");
 		exit(EXIT_FAILURE);
 	}
-	gwm_tiling_window_data *wdata = win->organizer_data;
+	gwm_tiling_window *wdata = win->organizer_data;
 	wdata->column = data->active_column;
 	wdata->data = data;
+	wdata->win = win;
+	wdata->next = NULL;
+	if(!data->active_column->wins) {
+		data->active_column->wins = win->organizer_data;
+	} else {
+		wdata->prev = gwm_tiling_window_get_last(data->active_column->wins);
+	}
 
 	gwm_tiling_move_resize(win);
 }
 
+// Private function for removing a tiling window.
+static void _gwm_tiling_remove_window(gwm_tiling_window *win) {
+	GWM_NEXT_IF_FIRST(win->column->wins, win);
+	GWM_LIST_REMOVE(win);
+}
+
 void gwm_tiling_remove_window(gwm_window *win) {
+	gwm_tiling_window *wdata = win->organizer_data;
+	gwm_tiling_column *col = wdata->column;
+	_gwm_tiling_remove_window(wdata);
+	if(!col->wins) {
+		gwm_tiling_destroy_column(col);
+	}
 }
 
 void gwm_tiling_reorganize_all(gwm_workspace *spc) {
@@ -114,56 +135,73 @@ unsigned gwm_tiling_column_count_windows(
 	unsigned ret = 0;
 	gwm_window *win;
 	for(win = spc->wins; win; win = win->next) {
-		gwm_tiling_window_data *wdata = win->organizer_data;
+		gwm_tiling_window *wdata = win->organizer_data;
 		if(wdata->column == column) ret++;
 	}
 	return ret;
 }
 
+void gwm_tiling_window_change_column(
+		gwm_tiling_window *w,
+		gwm_tiling_column *col) {
+}
+
 void gwm_tiling_move_resize(gwm_window *win) {
-	gwm_tiling_window_data *wdata = win->organizer_data;
+	gwm_tiling_window *wdata = win->organizer_data;
 	gwm_tiling_data *data = wdata->data;
 
 	// Column width
-	unsigned int cw = win->spc->gwm->sw / data->column_count;
+	unsigned int cw = win->spc->gwm->sw / (data->column_count ? data->column_count : 0);
 	gwm_window_move(win, cw * wdata->column->column_nr, 0);
 	gwm_window_resize(win, cw, win->spc->gwm->sh);
 }
 
 void gwm_tiling_move_window_left(gwm_window *win) {
-	gwm_tiling_window_data *wdata = win->organizer_data;
+	gwm_tiling_window *wdata = win->organizer_data;
 	gwm_tiling_column *orig_column = wdata->column;
-	if(wdata->column->prev) {
-		wdata->column = wdata->column->prev;
+	gwm_tiling_column *prev = wdata->column->prev;
+	_gwm_tiling_remove_window(wdata);
+	if(prev) {
+		wdata->column = prev;
 		gwm_tiling_move_resize(win);
 	} else {
 		wdata->column = gwm_tiling_create_column(
 				wdata->data,
 				NULL,
-				wdata->column);
+				orig_column);
 		wdata->data->columns = wdata->column;
-		gwm_tiling_reorganize_all(win->spc);
+		wdata->column->wins = wdata;
 	}
-	if(!gwm_tiling_column_count_windows(win->spc, orig_column)) {
+	if(!orig_column->wins) {
 		gwm_tiling_destroy_column(orig_column);
 	}
+	wdata->data->active_column = wdata->column;
+	gwm_tiling_reorganize_all(win->spc);
+	focus(win);
+	raise(win);
 }
 
 void gwm_tiling_move_window_right(gwm_window *win) {
-	gwm_tiling_window_data *wdata = win->organizer_data;
+	gwm_tiling_window *wdata = win->organizer_data;
 	gwm_tiling_column *orig_column = wdata->column;
-	if(wdata->column->next) {
-		wdata->column = wdata->column->next;
+	gwm_tiling_column *next = wdata->column->next;
+	_gwm_tiling_remove_window(wdata);
+	if(next) {
+		wdata->column = next;
 		gwm_tiling_move_resize(win);
 	} else {
 		wdata->column = gwm_tiling_create_column(
 				wdata->data,
-				wdata->column,
+				orig_column,
 				NULL);
-		gwm_tiling_reorganize_all(win->spc);
+		wdata->column->wins = wdata;
 	}
-	if(!gwm_tiling_column_count_windows(win->spc, orig_column)) {
+	if(!orig_column->wins) {
 		gwm_tiling_destroy_column(orig_column);
 	}
+	wdata->data->active_column = wdata->column;
+	gwm_tiling_reorganize_all(win->spc);
+	focus(win);
+	raise(win);
 }
 
