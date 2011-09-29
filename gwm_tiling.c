@@ -19,7 +19,9 @@ void gwm_tiling_init(gwm_workspace *spc) {
 	spc->organizer->free_organizer = gwm_tiling_free;
 	spc->organizer->move_left = gwm_tiling_move_window_left;
 	spc->organizer->move_right = gwm_tiling_move_window_right;
-	spc->organizer->focus = gwm_tiling_focus;
+	spc->organizer->focus = gwm_tiling_received_focus;
+	spc->organizer->select_left = gwm_tiling_select_left;
+	spc->organizer->select_right = gwm_tiling_select_right;
 	spc->organizer->data = malloc(sizeof(gwm_tiling_data));
 	if(!spc->organizer->data) {
 		free(spc->organizer);
@@ -53,12 +55,14 @@ gwm_tiling_column *gwm_tiling_create_column(
 	ret->next = next;
 	if(next) next->prev = ret;
 	ret->wins = NULL;
+	ret->focus = NULL;
 	return ret;
 }
 
-void gwm_tiling_focus(gwm_window *win) {
+void gwm_tiling_received_focus(gwm_window *win) {
 	gwm_tiling_window *wdata = win->organizer_data;
 	wdata->data->active_column = wdata->column;
+	wdata->column->focus = wdata;
 }
 
 void gwm_tiling_destroy_column(gwm_tiling_column *column) {
@@ -95,8 +99,9 @@ void gwm_tiling_add_window(gwm_window *win) {
 	} else {
 		wdata->prev = gwm_tiling_window_get_last(data->active_column->wins);
 	}
-
+	wdata->column->focus = wdata;
 	gwm_tiling_move_resize(win);
+	focus(win);
 }
 
 // Private function for removing a tiling window.
@@ -141,6 +146,27 @@ unsigned gwm_tiling_column_count_windows(
 	return ret;
 }
 
+void gwm_tiling_select_left(gwm_window *win) {
+	gwm_tiling_window *wdata = win->organizer_data;
+	gwm_tiling_column *col = wdata->column;
+	if(col->prev) {
+		gwm_tiling_column_focus(col->prev);
+	}
+}
+
+void gwm_tiling_select_right(gwm_window *win) {
+	gwm_tiling_window *wdata = win->organizer_data;
+	gwm_tiling_column *col = wdata->column;
+	if(col->next) {
+		gwm_tiling_column_focus(col->next);
+	}
+}
+void gwm_tiling_column_focus(gwm_tiling_column *col) {
+	col->data->active_column = col;
+	if(!col->focus) return;
+	focus(col->focus->win);
+}
+
 void gwm_tiling_window_change_column(
 		gwm_tiling_window *w,
 		gwm_tiling_column *col) {
@@ -176,6 +202,7 @@ void gwm_tiling_move_window_left(gwm_window *win) {
 		gwm_tiling_destroy_column(orig_column);
 	}
 	wdata->data->active_column = wdata->column;
+	wdata->column->focus = wdata;
 	gwm_tiling_reorganize_all(win->spc);
 	focus(win);
 	raise(win);
@@ -200,6 +227,7 @@ void gwm_tiling_move_window_right(gwm_window *win) {
 		gwm_tiling_destroy_column(orig_column);
 	}
 	wdata->data->active_column = wdata->column;
+	wdata->column->focus = wdata;
 	gwm_tiling_reorganize_all(win->spc);
 	focus(win);
 	raise(win);

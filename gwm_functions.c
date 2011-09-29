@@ -142,6 +142,14 @@ void resize_window_down() {_resize_window(0, CONFIG_RESIZE_BY);}
 void resize_window_left() {_resize_window(-CONFIG_RESIZE_BY, 0);}
 void resize_window_right() {_resize_window(CONFIG_RESIZE_BY, 0);}
 
+void select_left() {
+	gwm.focused->spc->organizer->select_left(gwm.focused);
+}
+
+void select_right() {
+	gwm.focused->spc->organizer->select_right(gwm.focused);
+}
+
 void fullscreen() {
 	if(gwm.focused) {
 		gwm_window_fullscreen(gwm.focused);

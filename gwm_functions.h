@@ -20,6 +20,10 @@ void resize_window_up();
 void resize_window_down();
 void resize_window_left();
 void resize_window_right();
+void select_left();
+void select_right();
+void select_up();
+void select_down();
 void fullscreen();
 
 #endif

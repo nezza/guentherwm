@@ -11,6 +11,7 @@ struct gwm_tiling_column {
 	gwm_tiling_data *data;
 	unsigned int column_nr;
 	gwm_tiling_window *wins;
+	gwm_tiling_window *focus;
 	gwm_tiling_column *prev;
 	gwm_tiling_column *next;
 };
@@ -43,7 +44,10 @@ void gwm_tiling_reorganize_all(gwm_workspace *spc);
 void gwm_tiling_move_resize(gwm_window *win);
 void gwm_tiling_move_window_left(gwm_window *win);
 void gwm_tiling_move_window_right(gwm_window *win);
-void gwm_tiling_focus(gwm_window *win);
+void gwm_tiling_received_focus(gwm_window *win);
+void gwm_tiling_column_focus(gwm_tiling_column *col);
+void gwm_tiling_select_left(gwm_window *win);
+void gwm_tiling_select_right(gwm_window *win);
 
 #endif
 
