@@ -146,6 +146,7 @@ void maprequest(gwm_context *gc, XEvent *e) {
 			None);
 	XRaiseWindow(gwm.dpy, ev->window);
 	XMapWindow(gwm.dpy, ev->window);
+	focus(gwm_context_get_window(&gwm, ev->window));
 }
 void enternotify(gwm_context *gc, XEvent *e){
 	XCrossingEvent *ev = &e->xcrossing;
@@ -186,13 +187,22 @@ void keypress(gwm_context *gc, XEvent *e) {
 	}
 }
 
+void destroynotify(gwm_context *gc, XEvent *e) {
+	XDestroyWindowEvent *ev;
+	ev = &e->xdestroywindow;
+	gwm_window *win = gwm_context_get_window(&gwm, ev->window);
+	if(!win) return;
+	gwm_workspace_remove_window(win);
+}
+
 gwm_event_handler handler[LASTEvent] = {
 	[ButtonPress] = buttonpress,
 	[MapRequest] = maprequest,
 	[UnmapNotify] = unmapnotify,
 	[EnterNotify] = enternotify,
 	[ConfigureRequest] = configurerequest,
-	[KeyPress] = keypress
+	[KeyPress] = keypress,
+	[DestroyNotify] = destroynotify
 };
 int main() {
 	gwm_context_init(&gwm, NULL);
