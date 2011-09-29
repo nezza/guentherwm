@@ -120,8 +120,16 @@ static void _move_window(unsigned x, unsigned y) {
 
 void move_window_up() {_move_window(0, -CONFIG_MOVE_BY);}
 void move_window_down() {_move_window(0, CONFIG_MOVE_BY);}
-void move_window_left() {_move_window(-CONFIG_MOVE_BY, 0);}
-void move_window_right() {_move_window(CONFIG_MOVE_BY, 0);}
+
+void move_window_left() {
+	gwm.focused->spc->organizer->move_left(gwm.focused);
+}
+void move_window_right(){
+	gwm.focused->spc->organizer->move_right(gwm.focused);
+}
+
+//void move_window_left() {_move_window(-CONFIG_MOVE_BY, 0);}
+//void move_window_right() {_move_window(CONFIG_MOVE_BY, 0);}
 
 static void _resize_window(unsigned w, unsigned h) {
 	if(gwm.focused) {

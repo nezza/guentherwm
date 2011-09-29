@@ -1,4 +1,6 @@
 #include "gwm_workspace.h"
+#include "config.h"
+#include "gwm_tiling.h"
 
 #include <stdlib.h>
 
@@ -13,6 +15,7 @@ gwm_workspace *gwm_workspace_create(gwm_context *gwm) {
 		last->next = ret;
 	}
 	ret->next = NULL;
+	CONFIG_DEFAULT_ORGANIZER(ret);
 	return ret;
 }
 
@@ -29,6 +32,7 @@ void gwm_workspace_add_window(gwm_workspace *spc, gwm_window *win) {
 	}
 	win->next = NULL;
 	win->spc = spc;
+	spc->organizer->add_window(win);
 }
 
 void gwm_workspace_remove_window(gwm_window *win) {

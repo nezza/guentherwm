@@ -26,6 +26,8 @@ gwm_window *gwm_create_window(gwm_workspace *spc, Window w) {
 
 	ret->spc = spc;
 
+	ret->organizer_data = NULL;
+
 	return ret;
 }
 

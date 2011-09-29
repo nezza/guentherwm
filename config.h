@@ -14,5 +14,7 @@
 
 #define CONFIG_MODKEY Mod4Mask
 
+#define CONFIG_DEFAULT_ORGANIZER gwm_tiling_init
+
 #endif
 

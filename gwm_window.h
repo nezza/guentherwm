@@ -16,6 +16,8 @@ struct gwm_window {
 	gwm_window *prev;
 
 	gwm_workspace *spc;
+
+	void *organizer_data;
 };
 
 gwm_window *gwm_window_get_window(gwm_window *wins, Window w);

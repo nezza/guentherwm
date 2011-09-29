@@ -10,6 +10,7 @@ SRCS += gwm_focus_raise.c
 SRCS += gwm_functions.c
 SRCS += gwm_keys.c
 SRCS += gwm_workspace.c
+SRCS += gwm_tiling.c
 HDRS  = $(SRCS,.c=.h)
 OBJS  = $(SRCS:.c=.o)
 
