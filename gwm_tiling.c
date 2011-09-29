@@ -177,7 +177,8 @@ void gwm_tiling_move_resize(gwm_window *win) {
 	gwm_tiling_data *data = wdata->data;
 
 	// Column width
-	unsigned int cw = win->spc->gwm->sw / (data->column_count ? data->column_count : 0);
+	unsigned int cw = win->spc->gwm->sw / (data->column_count ?
+			data->column_count : 1);
 	gwm_window_move(win, cw * wdata->column->column_nr, 0);
 	gwm_window_resize(win, cw, win->spc->gwm->sh);
 }
