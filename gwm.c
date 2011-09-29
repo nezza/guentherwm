@@ -125,7 +125,7 @@ void maprequest(gwm_context *gc, XEvent *e) {
 			wa.x, wa.y, wa.width, wa.height);
 	manage(ev->window, &wa);
 	XWindowChanges wc;
-	wc.border_width = 1;
+	wc.border_width = CONFIG_BORDER_WIDTH;
 	XConfigureWindow(gwm.dpy, ev->window, CWBorderWidth, &wc);
 	XSetWindowBorder(gwm.dpy, ev->window, gwm.cs_norm.border);
 	XSelectInput(gwm.dpy, ev->window,

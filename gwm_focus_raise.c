@@ -9,7 +9,7 @@ void focus(gwm_window *win) {
 	XSetInputFocus(gwm.dpy, win->win, RevertToPointerRoot, CurrentTime);
 	XUngrabButton(gwm.dpy, AnyButton, AnyModifier, win->win);
 	XGrabButton(gwm.dpy, AnyButton, AnyModifier, win->win, False, ButtonPressMask, GrabModeSync, GrabModeSync, None, None);
-	win->spc->organizer->focus(win);
+	win->spc->organizer->focus_window(win);
 	gwm.focused = win;
 }
 

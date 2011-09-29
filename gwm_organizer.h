@@ -9,7 +9,8 @@ struct gwm_organizer {
 	void (*free_organizer)(gwm_workspace *spc);
 	void (*move_left)(gwm_window *win);
 	void (*move_right)(gwm_window *win);
-	void (*focus)(gwm_window *win);
+	void (*focus)(gwm_workspace *spc);
+	void (*focus_window)(gwm_window *win);
 	void (*select_left)(gwm_window *win);
 	void (*select_right)(gwm_window *win);
 	void *data;

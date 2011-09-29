@@ -33,21 +33,33 @@ struct gwm_tiling_window {
 };
 
 void gwm_tiling_init(gwm_workspace *spc);
-void gwm_tiling_free(gwm_workspace *spc);
+
+// The functions that are needed for each organizer:
+void gwm_tiling_org_add_window(gwm_window *win);
+void gwm_tiling_org_remove_window(gwm_window *win);
+void gwm_tiling_org_free(gwm_workspace *spc);
+void gwm_tiling_org_move_window_left(gwm_window *win);
+void gwm_tiling_org_move_window_right(gwm_window *win);
+void gwm_tiling_org_focus(gwm_workspace *spc);
+void gwm_tiling_org_focus_window(gwm_window *win);
+void gwm_tiling_org_select_left(gwm_window *win);
+void gwm_tiling_org_select_right(gwm_window *win);
+
+void gwm_tiling_reorganize_all(gwm_workspace *spc);
+
+// Column functions
 gwm_tiling_column *gwm_tiling_create_column(
 		gwm_tiling_data *data,
 		gwm_tiling_column *prev,
 		gwm_tiling_column *next);
-void gwm_tiling_add_window(gwm_window *win);
-void gwm_tiling_remove_window(gwm_window *win);
-void gwm_tiling_reorganize_all(gwm_workspace *spc);
-void gwm_tiling_move_resize(gwm_window *win);
-void gwm_tiling_move_window_left(gwm_window *win);
-void gwm_tiling_move_window_right(gwm_window *win);
-void gwm_tiling_received_focus(gwm_window *win);
+void gwm_tiling_destroy_column(gwm_tiling_column *column);
+gwm_tiling_column *gwm_tiling_column_get_last(gwm_tiling_column *column);
+unsigned gwm_tiling_column_count_windows(gwm_tiling_column *column);
 void gwm_tiling_column_focus(gwm_tiling_column *col);
-void gwm_tiling_select_left(gwm_window *win);
-void gwm_tiling_select_right(gwm_window *win);
+
+// Window functions
+gwm_tiling_window *gwm_tiling_window_get_last(gwm_tiling_window *win);
+void gwm_tiling_move_resize(gwm_window *win);
 
 #endif
 

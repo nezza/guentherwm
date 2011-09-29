@@ -58,6 +58,7 @@ void gwm_workspace_show(gwm_workspace *spc) {
 		// Map ('show') each window.
 		XMapWindow(spc->gwm->dpy, cur->win);
 	}
+	spc->organizer->focus(spc);
 }
 
 void gwm_workspace_hide(gwm_workspace *spc) {
