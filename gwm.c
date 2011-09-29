@@ -102,6 +102,10 @@ void configurerequest(gwm_context *gc, XEvent *e) {
 	XSync(gwm.dpy, False);
 }
 
+void unmapnotify(gwm_context *gc, XEvent *e) {
+	puts("Unmap");
+}
+
 void maprequest(gwm_context *gc, XEvent *e) {
 	XWindowAttributes wa;
 	XMapRequestEvent *ev = &e->xmaprequest;
@@ -185,6 +189,7 @@ void keypress(gwm_context *gc, XEvent *e) {
 gwm_event_handler handler[LASTEvent] = {
 	[ButtonPress] = buttonpress,
 	[MapRequest] = maprequest,
+	[UnmapNotify] = unmapnotify,
 	[EnterNotify] = enternotify,
 	[ConfigureRequest] = configurerequest,
 	[KeyPress] = keypress
