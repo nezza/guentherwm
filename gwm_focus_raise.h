@@ -5,6 +5,7 @@
 
 void focus(gwm_window *win);
 void unfocus(gwm_window *win);
+void raise(gwm_window *win);
 
 #endif
 
