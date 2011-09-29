@@ -1,6 +1,7 @@
 #include "gwm_workspace.h"
 #include "config.h"
 #include "gwm_tiling.h"
+#include "gwm_list_helpers.h"
 
 #include <stdlib.h>
 
@@ -36,25 +37,10 @@ void gwm_workspace_add_window(gwm_workspace *spc, gwm_window *win) {
 }
 
 void gwm_workspace_remove_window(gwm_window *win) {
-	if(win->next) {
-		if(win->prev) {
-			win->next->prev = win->prev;
-			win->prev->next = win->next;
-		} else {
-			win->next->prev = NULL;
-		}
-	}
-	if(win->prev) {
-		if(win->next) {
-			win->prev->next = win->next;
-			win->next->prev = win->prev;
-		} else {
-			win->prev->next = NULL;
-		}
-		win->spc->wins = gwm_window_get_first(win->prev);
-	} else {
+	if(win->spc->wins == win) {
 		win->spc->wins = win->next;
 	}
+	GWM_LIST_REMOVE(win);
 }
 
 // Find a window on the workspace. Can also be used to just determine
