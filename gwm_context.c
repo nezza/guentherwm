@@ -12,9 +12,10 @@ extern int (*xerrorxlib)(Display *, XErrorEvent *);
 extern int xerrorstart(Display *dpy, XErrorEvent *ee);
 extern int xerror(Display *dpy, XErrorEvent *ee);
 
-void gwm_context_add_window(Window w) {
+gwm_window *gwm_context_add_window(Window w) {
 	gwm_window *new = gwm_create_window(gwm.active, w);
 	gwm_workspace_add_window(gwm.active, new);
+	return new;
 }
 
 gwm_window *gwm_context_get_window(gwm_context *gwm, Window w) {

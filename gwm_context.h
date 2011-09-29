@@ -41,7 +41,7 @@ struct gwm_context {
 extern gwm_context gwm;
 
 gwm_window *gwm_context_get_window(gwm_context *gwm, Window w);
-void gwm_context_add_window(Window w);
+gwm_window *gwm_context_add_window(Window w);
 void gwm_context_init(gwm_context *gwm, char *display_name);
 
 #endif
